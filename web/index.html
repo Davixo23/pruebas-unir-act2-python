@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+          crossorigin="anonymous" />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="constants.js"></script>
+    <style>
+        html {
+            position: relative;
+        }
+        body {
+            background: #ffffff;
+            margin: 0;
+        }
+        main {
+            padding: 20px;
+        }
+        .main-column {
+            margin-bottom: 100px;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column h-100">
+    <main role="main" class="flex-shrink-0">
+        <div id="calc">
+            <!-- Área de entrada de operandos -->
+            <div>
+                Operand 1: <input id="in-op1" v-model="op1" />
+                Operand 2: <input id="in-op2" v-model="op2" />
+            </div>
+            
+            <!-- Área de botones de operaciones -->
+            <!-- Agregar todos los botones de operaciones matemáticas -->
+            <div>
+                <!-- Operaciones básicas -->
+                <button id="button-add" v-on:click="add()">+</button>
+                <button id="button-substract" v-on:click="substract()">-</button>
+                <button id="button-multiply" v-on:click="multiply()">*</button>
+                <button id="button-divide" v-on:click="divide()">/</button>
+                
+                <!-- Operaciones avanzadas -->
+                <button id="button-power" v-on:click="power()">^</button>
+                <button id="button-sqrt" v-on:click="sqrt()">√</button>
+                <button id="button-log10" v-on:click="log10()">log10</button>
+            </div>
+            
+            <!-- Área de resultado -->
+            <div id="result-area">Result: {{ result }}</div>
+            
+            <!-- Área de historial -->
+            <div>
+                History:
+                <ul id="history-log">
+                    <li v-for="entry in outputLog">{{ entry }}</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        var calc = new Vue({
+            el: "#calc",
+            data: {
+                outputLog: [],    // Array para almacenar el historial de operaciones
+                op1: "1",        // Primer operando
+                op2: "2",        // Segundo operando
+                result: ""       // Resultado de la operación
+            },
+            methods: {
+                // Operaciones básicas
+                add: function() {
+                    this.apiCall('add', this.op1, this.op2);
+                },
+                substract: function() {
+                    this.apiCall('substract', this.op1, this.op2);
+                },
+                multiply: function() {
+                    this.apiCall('multiply', this.op1, this.op2);
+                },
+                divide: function() {
+                    this.apiCall('divide', this.op1, this.op2);
+                },
+                
+                // Operaciones avanzadas
+                power: function() {
+                    this.apiCall('power', this.op1, this.op2);
+                },
+                sqrt: function() {
+                    // sqrt solo necesita un operando
+                    this.apiCall('sqrt', this.op1);
+                },
+                log10: function() {
+                    // log10 solo necesita un operando
+                    this.apiCall('log10', this.op1);
+                },
+                
+                // Función general para hacer llamadas a la API
+                apiCall: function(func, op1, op2) {
+                  var url = `${baseUrl}/calc/${func}/${op1}${op2 ? '/' + op2 : ''}`;
+                  axios
+                      .get(url)
+                      .then(response => {
+                          var entry = `GET ${url} (${response.statusText})`;
+                          if (response.data && response.data.result) {
+                              entry = entry + ": " + response.data.result;
+                          }
+                          this.outputLog.push(entry);
+                          this.result = response.data.result;  // Acceder directamente al resultado
+                      })
+                      .catch(e => {
+                          this.outputLog.push(e);
+                      });
+                }
+            }
+        });
+    </script>
+</body>
+</html>
