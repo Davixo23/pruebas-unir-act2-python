@@ -25,6 +25,10 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
+        # Casos de error
+        invalid_url = f"{BASE_URL}/calc/add/a/b"
+        with self.assertRaises(HTTPError):
+            urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
 
     def test_api_substract(self):
         """Prueba la operación de resta"""
@@ -34,6 +38,10 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
+        # Casos de error
+        invalid_url = f"{BASE_URL}/calc/substract/a/b"
+        with self.assertRaises(HTTPError):
+            urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
     def test_api_multiply(self):
         """Prueba la operación de multiplicación"""
         url = f"{BASE_URL}/calc/multiply/4/5"
@@ -42,6 +50,11 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
+        # Casos de error
+        invalid_url = f"{BASE_URL}/calc/multiply/a/b"
+        with self.assertRaises(HTTPError):
+            urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
+
     def test_api_divide(self):
         """Prueba la operación de división"""
         # Caso exitoso
@@ -51,11 +64,15 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
-        
-        # Caso de error (división por cero)
-        url = f"{BASE_URL}/calc/divide/10/0"
+        # Casos de error
+        url_div_zero = f"{BASE_URL}/calc/divide/10/0"
         with self.assertRaises(HTTPError):
-            urlopen(url, timeout=DEFAULT_TIMEOUT)
+            urlopen(url_div_zero, timeout=DEFAULT_TIMEOUT)
+
+        url_invalid = f"{BASE_URL}/calc/divide/a/b"
+        with self.assertRaises(HTTPError):
+            urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
+    
     def test_api_power(self):
         """Prueba la operación de potencia"""
         url = f"{BASE_URL}/calc/power/2/3"
@@ -64,6 +81,11 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
+        # Casos de error
+        invalid_url = f"{BASE_URL}/calc/power/a/b"
+        with self.assertRaises(HTTPError):
+            urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
+
     def test_api_sqrt(self):
         """Prueba la operación de raíz cuadrada"""
         # Caso exitoso
@@ -73,11 +95,14 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
-        
-        # Caso de error (raíz cuadrada negativa)
-        url = f"{BASE_URL}/calc/sqrt/-1/0"
+        # Casos de error
+        url_negativo = f"{BASE_URL}/calc/sqrt/-1/0"
         with self.assertRaises(HTTPError):
-            urlopen(url, timeout=DEFAULT_TIMEOUT)
+            urlopen(url_negativo, timeout=DEFAULT_TIMEOUT)
+
+        url_invalid = f"{BASE_URL}/calc/sqrt/a/0"
+        with self.assertRaises(HTTPError):
+            urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
     
     def test_api_log10(self):
         """Prueba la operación de logaritmo en base 10"""
@@ -88,19 +113,31 @@ class TestApi(unittest.TestCase):
             response.status, http.client.OK, 
             f"Error en la petición API a {url}"
         )
-        
         # Casos de error
-        url = f"{BASE_URL}/calc/log10/0/0"
+        url_cero = f"{BASE_URL}/calc/log10/0/0"
         with self.assertRaises(HTTPError):
-            urlopen(url, timeout=DEFAULT_TIMEOUT)
-            
-        url = f"{BASE_URL}/calc/log10/-1/0"
+            urlopen(url_cero, timeout=DEFAULT_TIMEOUT)
+
+        url_negativo = f"{BASE_URL}/calc/log10/-1/0"
         with self.assertRaises(HTTPError):
-            urlopen(url, timeout=DEFAULT_TIMEOUT)
+            urlopen(url_negativo, timeout=DEFAULT_TIMEOUT)
+
+        url_invalid = f"{BASE_URL}/calc/log10/a/0"
+        with self.assertRaises(HTTPError):
+            urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
+    
     def test_api_invalid_url(self):
         """Prueba una URL inválida"""
         url = f"{BASE_URL}/calc/invalid/2/2"
         with self.assertRaises(HTTPError):
+            urlopen(url, timeout=DEFAULT_TIMEOUT)
+
+
+    def test_connection_error(self):
+        """Prueba el error de conexión"""
+        invalid_base_url = "http://localhost:12345"
+        url = f"{invalid_base_url}/calc/add/2/2"
+        with self.assertRaises(URLError):
             urlopen(url, timeout=DEFAULT_TIMEOUT)
 
 if __name__ == '__main__':
