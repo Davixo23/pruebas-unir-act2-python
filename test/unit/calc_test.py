@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 import pytest
+import math
 
 from app.calc import Calculator
 
@@ -50,7 +51,55 @@ class TestCalculate(unittest.TestCase):
         self.assertEqual(0, self.calc.multiply(1, 0))
         self.assertEqual(0, self.calc.multiply(-1, 0))
         self.assertEqual(-2, self.calc.multiply(-1, 2))
+    def test_subtract_method_returns_correct_result(self):
+        self.assertEqual(0, self.calc.substract(2, 2))
+        self.assertEqual(4, self.calc.substract(2, -2))
+        self.assertEqual(-4, self.calc.substract(-2, 2))
+        self.assertEqual(2, self.calc.substract(2, 0))
 
+    def test_subtract_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.substract, "2", 2)
+        self.assertRaises(TypeError, self.calc.substract, 2, "2")
+        self.assertRaises(TypeError, self.calc.substract, None, 2)
+        self.assertRaises(TypeError, self.calc.substract, 2, None)
+
+    @patch('app.util.validate_permissions', side_effect=mocked_validation, create=True)
+    def test_power_method_returns_correct_result(self, _validate_permissions):
+        self.assertEqual(4, self.calc.power(2, 2))
+        self.assertEqual(8, self.calc.power(2, 3))
+        self.assertEqual(1, self.calc.power(2, 0))
+        self.assertEqual(0.25, self.calc.power(2, -2))
+
+    def test_power_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.power, "2", 2)
+        self.assertRaises(TypeError, self.calc.power, 2, "2")
+
+    @patch('app.util.validate_permissions', side_effect=mocked_validation, create=True)
+    def test_sqrt_method_returns_correct_result(self, _validate_permissions):
+        self.assertAlmostEqual(math.sqrt(4), self.calc.sqrt(4))
+        self.assertAlmostEqual(math.sqrt(2), self.calc.sqrt(2))
+        self.assertAlmostEqual(0, self.calc.sqrt(0))
+
+    def test_sqrt_method_fails_with_negative_number(self):
+        self.assertRaises(ValueError, self.calc.sqrt, -1)
+        self.assertRaises(ValueError, self.calc.sqrt, -2)
+
+    def test_sqrt_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.sqrt, "2")
+        self.assertRaises(TypeError, self.calc.sqrt, None)
+
+    @patch('app.util.validate_permissions', side_effect=mocked_validation, create=True)
+    def test_log10_method_returns_correct_result(self, _validate_permissions):
+        self.assertAlmostEqual(math.log10(10), self.calc.log10(10))
+        self.assertAlmostEqual(math.log10(100), self.calc.log10(100))
+
+    def test_log10_method_fails_with_negative_number(self):
+        self.assertRaises(ValueError, self.calc.log10, -1)
+        self.assertRaises(ValueError, self.calc.log10, -2)
+
+    def test_log10_method_fails_with_nan_parameter(self):
+        self.assertRaises(TypeError, self.calc.log10, "2")
+        self.assertRaises(TypeError, self.calc.log10, None)
 
 if __name__ == "__main__":  # pragma: no cover
     unittest.main()

@@ -34,16 +34,21 @@ class Calculator:
         return x ** y
 
     def sqrt(self, a: float) -> float:
+        """Calcula la raíz cuadrada de un número."""
+        if not isinstance(a, (int, float)):
+            raise TypeError("El parámetro debe ser un número")
         if a < 0:
-            raise TypeError("No se puede calcular la raíz cuadrada de un número negativo")
-        print(a)
+            raise ValueError("No se puede calcular la raíz cuadrada de un número negativo")
         return math.sqrt(a)
 
     def log10(self, a: float) -> float:
+        """Calcula el logaritmo en base 10 de un número."""
+        if not isinstance(a, (int, float)):
+            raise TypeError("El parámetro debe ser un número")
         if a <= 0:
-            raise TypeError("El logaritmo solo está definido para números positivos")
-        print(a)
+            raise ValueError("El logaritmo solo está definido para números positivos")
         return math.log10(a)
+    
     def check_types(self, x, y):
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)):
             raise TypeError("Parameters must be numbers")
