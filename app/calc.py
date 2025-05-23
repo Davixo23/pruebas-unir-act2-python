@@ -34,7 +34,6 @@ class Calculator:
         return x ** y
 
     def sqrt(self, a: float) -> float:
-        """Calcula la raíz cuadrada de un número."""
         if not isinstance(a, (int, float)):
             raise TypeError("El parámetro debe ser un número")
         if a < 0:
@@ -42,7 +41,6 @@ class Calculator:
         return math.sqrt(a)
 
     def log10(self, a: float) -> float:
-        """Calcula el logaritmo en base 10 de un número."""
         if not isinstance(a, (int, float)):
             raise TypeError("El parámetro debe ser un número")
         if a <= 0:

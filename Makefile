@@ -127,3 +127,10 @@ jmeter-load:
 	docker run --rm --network calc-test-jmeter --volume `pwd`:/opt/jmeter -w /opt/jmeter calculator-jmeter jmeter -n -t test/jmeter/jmeter-plan.jmx -l results/jmeter_results.csv -e -o results/jmeter/
 	docker stop apiserver || true
 	docker network rm calc-test-zap || true
+
+results-server:
+	docker run -d --rm --name results-server \
+    -v $(shell pwd)/results:/usr/share/nginx/html \
+	-v $(shell pwd)/nginx.conf:/etc/nginx/conf.d/default.conf \
+    -p 8081:80 \
+    nginx:alpine

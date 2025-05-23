@@ -16,9 +16,7 @@ class TestApi(unittest.TestCase):
         self.assertIsNotNone(BASE_URL, "URL no configurada")
         self.assertTrue(len(BASE_URL) > 8, "URL no configurada")
 
-
     def test_api_add(self):
-        """Prueba la operación de suma"""
         url = f"{BASE_URL}/calc/add/2/2"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(
@@ -31,7 +29,6 @@ class TestApi(unittest.TestCase):
             urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
 
     def test_api_substract(self):
-        """Prueba la operación de resta"""
         url = f"{BASE_URL}/calc/substract/5/3"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(
@@ -42,8 +39,8 @@ class TestApi(unittest.TestCase):
         invalid_url = f"{BASE_URL}/calc/substract/a/b"
         with self.assertRaises(HTTPError):
             urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
+
     def test_api_multiply(self):
-        """Prueba la operación de multiplicación"""
         url = f"{BASE_URL}/calc/multiply/4/5"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(
@@ -56,7 +53,6 @@ class TestApi(unittest.TestCase):
             urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
 
     def test_api_divide(self):
-        """Prueba la operación de división"""
         # Caso exitoso
         url = f"{BASE_URL}/calc/divide/10/2"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
@@ -72,9 +68,8 @@ class TestApi(unittest.TestCase):
         url_invalid = f"{BASE_URL}/calc/divide/a/b"
         with self.assertRaises(HTTPError):
             urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
-    
+
     def test_api_power(self):
-        """Prueba la operación de potencia"""
         url = f"{BASE_URL}/calc/power/2/3"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
         self.assertEqual(
@@ -87,7 +82,6 @@ class TestApi(unittest.TestCase):
             urlopen(invalid_url, timeout=DEFAULT_TIMEOUT)
 
     def test_api_sqrt(self):
-        """Prueba la operación de raíz cuadrada"""
         # Caso exitoso
         url = f"{BASE_URL}/calc/sqrt/16"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
@@ -105,7 +99,6 @@ class TestApi(unittest.TestCase):
             urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
     
     def test_api_log10(self):
-        """Prueba la operación de logaritmo en base 10"""
         # Caso exitoso
         url = f"{BASE_URL}/calc/log10/100"
         response = urlopen(url, timeout=DEFAULT_TIMEOUT)
@@ -127,14 +120,11 @@ class TestApi(unittest.TestCase):
             urlopen(url_invalid, timeout=DEFAULT_TIMEOUT)
     
     def test_api_invalid_url(self):
-        """Prueba una URL inválida"""
         url = f"{BASE_URL}/calc/invalid/2/2"
         with self.assertRaises(HTTPError):
             urlopen(url, timeout=DEFAULT_TIMEOUT)
 
-
     def test_connection_error(self):
-        """Prueba el error de conexión"""
         invalid_base_url = "http://localhost:12345"
         url = f"{invalid_base_url}/calc/add/2/2"
         with self.assertRaises(URLError):
